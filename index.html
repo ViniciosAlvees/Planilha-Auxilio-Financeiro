@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173d32">
+  <meta name="description" content="Organize suas contas, acompanhe vencimentos e mantenha seu controle financeiro em dia.">
+  <title>Minhas Contas — Controle financeiro</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./core.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Ir para o conteúdo</a>
+  <aside class="sidebar">
+    <a class="brand" href="#inicio" aria-label="Minhas Contas, início"><span class="brand-mark" data-icon="wallet"></span><span>minhas<span class="brand-light">contas</span><small>Seu controle financeiro</small></span></a>
+    <div class="nav-caption">SEU ESPAÇO</div>
+    <nav class="navigation" aria-label="Navegação principal">
+      <button type="button" data-view="overview" class="nav-item active"><span data-icon="grid"></span>Visão geral<span class="nav-dot"></span></button>
+      <button type="button" data-view="accounts" class="nav-item"><span data-icon="list"></span>Todas as contas<span id="nav-count" class="nav-count">0</span></button>
+      <button type="button" data-view="calendar" class="nav-item"><span data-icon="calendar"></span>Calendário</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="storage-card"><span data-icon="shield"></span><strong>Salvo neste navegador</strong><p>Suas contas ficam neste dispositivo. Guarde uma cópia para levar seus dados com você.</p><button type="button" class="sidebar-backup" id="backup-side">Fazer backup <span data-icon="arrow-up-right"></span></button></div>
+      <button type="button" id="import-button" class="import-button"><span data-icon="upload"></span>Restaurar backup</button>
+      <div class="sidebar-footer"><span class="status-dot"></span><span id="save-status">Tudo salvo por aqui</span></div>
+    </div>
+  </aside>
+  <main id="main" class="main" tabindex="-1">
+    <header class="page-header">
+      <div><div class="eyebrow">CONTROLE FINANCEIRO</div><h1 id="page-title">Visão geral</h1><p id="page-subtitle">Um lugar para organizar todas as suas contas.</p></div>
+      <div class="header-actions"><button type="button" class="button button-light backup-top" id="backup-top"><span data-icon="download"></span>Backup</button><button type="button" class="button button-primary" id="new-account"><span data-icon="plus"></span>Nova conta</button></div>
+    </header>
+    <div id="storage-warning" class="warning-banner" role="alert" hidden></div>
+    <section class="month-toolbar" aria-label="Mês consultado">
+      <div class="month-controls"><button type="button" class="icon-button" id="prev-month" aria-label="Mês anterior"><span data-icon="chevron-left"></span></button><label class="month-picker"><span data-icon="calendar"></span><span id="month-label"></span><input type="month" id="month-input" min="2000-01" max="2100-12" aria-label="Escolher mês"></label><button type="button" class="icon-button" id="next-month" aria-label="Próximo mês"><span data-icon="chevron-right"></span></button><button type="button" class="current-month" id="current-month">Mês atual</button></div>
+      <span class="month-context"><span class="status-dot"></span><span id="month-context">Acompanhando o mês atual</span></span>
+    </section>
+    <section class="summary-grid" aria-label="Resumo financeiro">
+      <article class="summary-card"><div class="summary-top"><span>Total do mês</span><span class="metric-icon neutral" data-icon="wallet"></span></div><strong id="total-value">R$ 0,00</strong><p id="total-note">Nenhuma conta registrada</p></article>
+      <article class="summary-card"><div class="summary-top"><span>Em aberto</span><span class="metric-icon amber" data-icon="clock"></span></div><strong id="open-value">R$ 0,00</strong><p id="open-note">Tudo certo neste mês</p></article>
+      <article class="summary-card"><div class="summary-top"><span>Já foi pago</span><span class="metric-icon green" data-icon="check-circle"></span></div><strong id="paid-value">R$ 0,00</strong><p id="paid-note">Contas com vencimento no mês</p></article>
+      <article class="summary-card"><div class="summary-top"><span>Em atraso</span><span class="metric-icon red" data-icon="alert"></span></div><strong id="overdue-value">R$ 0,00</strong><p id="overdue-note">Em todos os meses</p></article>
+    </section>
+    <div id="dashboard-view">
+      <section class="calendar-layout">
+        <div class="panel calendar-panel"><div class="panel-heading"><div><h2>Seu calendário</h2><p>Clique em um dia para ver os vencimentos.</p></div><span class="small-icon" data-icon="calendar"></span></div><div class="weekdays" aria-hidden="true"><span>DOM</span><span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SÁB</span></div><div id="calendar-grid" class="calendar-grid" aria-label="Calendário de vencimentos"></div><div class="calendar-legend"><span><i class="legend-dot green-dot"></i>Conta a pagar</span><span><i class="legend-dot red-dot"></i>Em atraso</span><span><i class="legend-today"></i>Hoje</span></div></div>
+        <aside class="panel agenda-panel"><div class="panel-heading"><div><span class="eyebrow">AGENDA DO DIA</span><h2 id="agenda-title"></h2></div><span id="agenda-count" class="count-badge">0</span></div><div id="agenda-list" class="agenda-list"></div><div class="agenda-total"><span>Em aberto neste dia</span><strong id="agenda-total">R$ 0,00</strong></div><button type="button" id="add-on-day" class="button button-outline"><span data-icon="plus"></span>Adicionar neste dia</button></aside>
+      </section>
+    </div>
+    <section class="panel accounts-panel" id="accounts-section"><div class="accounts-heading"><div><h2 id="accounts-heading">Contas do mês <span id="table-count" class="count-badge">0</span></h2><p id="accounts-description">Cada vencimento, com todos os detalhes.</p></div><button type="button" class="text-button" id="view-all">Ver todas <span data-icon="arrow-up-right"></span></button></div><div class="table-filters"><label class="search-field"><span data-icon="search"></span><input type="search" id="search" placeholder="Buscar conta ou instituição..." aria-label="Buscar conta ou instituição"></label><label class="filter-field"><span data-icon="filter"></span><select id="status-filter" aria-label="Filtrar situação"><option value="all">Todas as situações</option><option value="open">Em aberto</option><option value="overdue">Em atraso</option><option value="today">Vence hoje</option><option value="paid">Pagas</option></select></label></div><div id="accounts-table"></div><div class="table-footer"><span id="table-footer-note"></span><span>Valores em reais (R$)</span></div></section>
+    <footer class="main-footer"><span>Minhas Contas <span class="footer-divider">/</span> Um vencimento de cada vez.</span><span id="today-label"></span></footer>
+  </main>
+  <dialog id="account-dialog" class="modal"><form id="account-form"><div class="modal-header"><div><span class="eyebrow">SEU CONTROLE, DO SEU JEITO</span><h2 id="modal-title">Nova conta</h2></div><button type="button" class="icon-button" id="close-modal" aria-label="Fechar formulário"><span data-icon="x"></span></button></div><p class="modal-intro">Preencha os dados para acompanhar este vencimento.</p><input type="hidden" id="account-id"><div class="form-grid">
+    <label class="field full">Descrição / origem da dívida <span aria-hidden="true">*</span><input id="description" maxlength="120" required placeholder="Ex.: conta de luz, aluguel, empréstimo"></label>
+    <label class="field">Instituição ou pessoa <span aria-hidden="true">*</span><input id="creditor" maxlength="100" required placeholder="Para quem você vai pagar?"></label><label class="field">Valor (R$) <span aria-hidden="true">*</span><input type="number" id="amount" min="0.01" max="999999999" step="0.01" required placeholder="0,00" inputmode="decimal"></label>
+    <label class="field">Vencimento <span aria-hidden="true">*</span><input type="date" id="due-date" min="2000-01-01" max="2100-12-31" required></label><label class="field">Forma de pagamento <span aria-hidden="true">*</span><select id="payment-method" required><option value="">Selecione uma forma</option><option>Pix</option><option>Boleto</option><option>Cartão de crédito</option><option>Cartão de débito</option><option>Transferência</option><option>Débito automático</option><option>Dinheiro</option><option>Outro</option></select></label>
+    <label class="field">Categoria<select id="category"><option>Outros</option><option>Moradia</option><option>Alimentação</option><option>Transporte</option><option>Saúde</option><option>Educação</option><option>Lazer</option><option>Compras</option><option>Empréstimos</option><option>Serviços</option></select></label><label class="field">Pago em <small>(se já foi quitada)</small><input type="date" id="paid-date" min="2000-01-01" max="2100-12-31"></label>
+    <label class="field full">Observações <small>(opcional)</small><textarea id="notes" rows="2" maxlength="500" placeholder="Parcela, referência ou outro detalhe importante"></textarea></label>
+    <label class="repeat-option full" id="repeat-option"><input type="checkbox" id="recurring"><span><strong>Esta conta se repete todo mês</strong><small>Os próximos vencimentos serão criados automaticamente.</small></span><span data-icon="repeat"></span></label><p class="field-hint full" id="recurring-edit-note" hidden>Esta conta é recorrente. Sua edição altera apenas este vencimento.</p>
+  </div><div id="form-error" class="form-error" role="alert" hidden></div><div class="modal-footer"><button type="button" class="button button-light" id="cancel-modal">Cancelar</button><button type="submit" class="button button-primary" id="save-account"><span data-icon="check"></span>Salvar conta</button></div></form></dialog>
+  <dialog id="payment-dialog" class="modal small-modal"><form id="payment-form"><div class="modal-header"><h2>Registrar pagamento</h2><button type="button" class="icon-button" data-close="payment-dialog" aria-label="Fechar"><span data-icon="x"></span></button></div><p id="payment-description" class="modal-intro"></p><input type="hidden" id="payment-account-id"><label class="field">Data do pagamento<input id="payment-date" type="date" min="2000-01-01" max="2100-12-31" required></label><p class="field-hint">O pagamento corresponde ao valor integral desta conta.</p><div class="modal-footer"><button type="button" class="button button-light" data-close="payment-dialog">Cancelar</button><button type="submit" class="button button-primary">Confirmar pagamento</button></div></form></dialog>
+  <dialog id="confirm-dialog" class="modal small-modal"><div class="modal-header"><h2 id="confirm-title">Excluir conta?</h2><button type="button" class="icon-button" data-close="confirm-dialog" aria-label="Fechar"><span data-icon="x"></span></button></div><p id="confirm-text" class="modal-intro"></p><label class="repeat-option" id="stop-recurring-option" hidden><input id="stop-recurring" type="checkbox"><span><strong>Encerrar a recorrência</strong><small>Remove também os próximos vencimentos ainda não pagos.</small></span></label><div class="modal-footer"><button type="button" class="button button-light" data-close="confirm-dialog">Cancelar</button><button type="button" id="confirm-action" class="button button-danger">Excluir conta</button></div></dialog>
+  <dialog id="backup-dialog" class="modal small-modal"><div class="modal-header"><h2>Suas cópias de segurança</h2><button type="button" class="icon-button" data-close="backup-dialog" aria-label="Fechar"><span data-icon="x"></span></button></div><p class="modal-intro">Os dados ficam salvos neste navegador. Exporte um arquivo para guardar uma cópia ou transferir suas contas para outro dispositivo.</p><div class="backup-actions"><button type="button" id="backup-download" class="button button-primary"><span data-icon="download"></span>Exportar backup</button><button type="button" id="backup-restore" class="button button-light"><span data-icon="upload"></span>Restaurar um arquivo</button></div></dialog>
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

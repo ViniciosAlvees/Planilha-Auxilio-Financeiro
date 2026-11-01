@@ -1,0 +1,11 @@
+{
+  "name": "minhas-contas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Controle financeiro pessoal com calendário e contas recorrentes.",
+  "scripts": {
+    "dev": "node scripts/serve.js",
+    "build": "node scripts/build.js",
+    "test": "node --test"
+  }
+}
